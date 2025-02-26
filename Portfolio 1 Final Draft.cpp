@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <random>
 #include <string>
 //these includes are so I can do a wait command so the screen isnt just flooded with text.
@@ -11,6 +11,8 @@ void wait(int waittime);
 //this is a function for transistionary dialouge inbetween eventing
 void transtxt(int transtype);
 
+
+// I KNOW These are unnesccary globals, BUT, I ain't fixing them. I will try my best to NOT use globals on the next project, and instead rely on the function calls. However, as of right now I don't wanna fix all that.
 
 //Vital functions pieces for HP tracking
 int PLAYERHP = 20;
@@ -61,6 +63,7 @@ char EnemyGroup;
 
 //this is my enemy class, its to reduce on code bloat and it looks nice in int main.
 class Foes {
+
 public:
     std::string eniNM;
     std::string eniTXT;
@@ -71,11 +74,13 @@ public:
     int eniSCR;
     int eniENTtxt;
     int eniAFtxt;
-    int whatdrops;
+    //int* whatdrops;
     int dropchance;
     std::string dropname;
+    //this is the enemy constuctor, its how I tell c++ to take in data when I make an enemy later on (like at the start of int main() )
 
-    void ENEMYENC() {
+
+    void ENEMYENC(int &droppingvar) {
         transtxt(eniENTtxt);
         std::cout << std::endl << "Oh no! A " << eniNM << " blocks your path!" << std::endl;
         wait(500);
@@ -169,7 +174,7 @@ public:
                 if (dropchance >= rngdice) {
                     std::cout << "Oh! Theres something here!" << std::endl;
                     std::cout << "Picked up a" << dropname << "." << std::endl;
-                    whatdrops++;
+                    droppingvar++;
                     if (pieceofheart == 2) {
                         //for when you fight skelli
                         wait(500);
@@ -192,8 +197,8 @@ public:
                 if (rngdice >= 3) {
                     dropamount++;
                     dropamount++;
-                    whatdrops++;
-                    whatdrops++;
+                    droppingvar++;
+                    droppingvar++;
                     rngdice--;
                     rngdice--;
                 }
@@ -201,7 +206,7 @@ public:
                     rngdice = (rand() % 99) + 1;
                     if (mathfix >= rngdice) {
                         dropamount++;
-                        whatdrops++;
+                        droppingvar++;
                     }
                 }
                 std::cout << "Oh! Theres something here!" << std::endl;
@@ -220,8 +225,7 @@ public:
         incombat = false;
 
     }
-    //this is the enemy constuctor, its how I tell c++ to take in data when I make an enemy later on (like at the start of int main() )
-    Foes(std::string name, std::string txt, int hp, int dph, int flee, int hit, int score, int nttxt, int xttxt, int dropvar, int chance, std::string item) {
+    Foes(std::string name, std::string txt, int hp, int dph, int flee, int hit, int score, int nttxt, int xttxt, int chance, std::string item) {
         //if i put the brackets not here it doesnt work or something i don't fully understand why...
         eniNM = name;
         eniTXT = txt;
@@ -232,12 +236,11 @@ public:
         eniSCR = score;
         eniENTtxt = nttxt;
         eniAFtxt = xttxt;
-        whatdrops = dropvar;
+        //whatdrops = dropvar;
         dropchance = chance;
         dropname = item;
     };
 };
-
 
 
 
@@ -247,22 +250,22 @@ int main() {
     //formatting is
     //Foes(Name, attack, HP, DMG, Flee chance 1/x, Hit chance 1/x, base score for defeat, What entry dialouge to use, What after event dialouge to use, Which item drops, how often, dropped item name)
    
-    Foes goblin = Foes("Goblin", "swings a bat", 2, 1, 1, 2, 200, 1, 2, sparemeat, 5, " bag of meat scraps");
-    Foes skeleton = Foes("Skeleton", "swings a rusted sword", 3, ((rand() % 1) + 1), 3, 4, 300, 1, 2, pieceofheart, 30, " strange red crystal");
-    Foes onionsmall = Foes("Walking Onion", "tackles", 2, 1, 1, 5, 420, 1, 2, onions, 100, "n onion");
+    Foes goblin = Foes("Goblin", "swings a bat", 2, 1, 1, 2, 200, 1, 2, 5, " bag of meat scraps");
+    Foes skeleton = Foes("Skeleton", "swings a rusted sword", 3, ((rand() % 1) + 1), 3, 4, 300, 1, 2, 30, " strange red crystal");
+    Foes onionsmall = Foes("Walking Onion", "tackles", 2, 1, 1, 5, 420, 1, 2, 100, "n onion");
 
-    Foes skeletondangerous = Foes("Dangerous looking Skeleton", "swings a pristine sword", ((rand() % 6) + 1), ((rand() % 1) + 2), 3, 4, 500, 1, 2, pieceofheart, 75, "strange red crystal");
-    Foes snake = Foes("Large Snake", "bites", 5, 2, 4, 5, 370, 1, 2, snakeegg, 60, " strange egg");
-    Foes minos = Foes("Minotaur", "swings an axe", 7, 4, 2, 6, 900, 1, 2, sparemeat, 50, " bag of meat scraps");
-    Foes sqrl = Foes("Huge Squirrel", "throws a nut", 8, 3, 6, 7, 900, 1, 2, rarespice, 100, " bag of rare spices");
+    Foes skeletondangerous = Foes("Dangerous looking Skeleton", "swings a pristine sword", ((rand() % 6) + 1), ((rand() % 1) + 2), 3, 4, 500, 1, 2, 75, "strange red crystal");
+    Foes snake = Foes("Large Snake", "bites", 5, 2, 4, 5, 370, 1, 2, 60, " strange egg");
+    Foes minos = Foes("Minotaur", "swings an axe", 7, 4, 2, 6, 900, 1, 2, 50, " bag of meat scraps");
+    Foes sqrl = Foes("Huge Squirrel", "throws a nut", 8, 3, 6, 7, 900, 1, 2, 100, " bag of rare spices");
 
-    Foes onionlarge = Foes("Onion Lord", "spins like a top", 12, 3, 1, 3, 2222, 1, 2, onions, 567, "onions");
-    Foes lizard = Foes("Huge Lizard", "lunges and bites", 10, 2, 10, 3, 1111, 1, 2, snakeegg, 100, " strange egg");
+    Foes onionlarge = Foes("Onion Lord", "spins like a top", 12, 3, 1, 3, 2222, 1, 2, 567, "onions");
+    Foes lizard = Foes("Huge Lizard", "lunges and bites", 10, 2, 10, 3, 1111, 1, 2, 100, " strange egg");
 
-    Foes goblinlarge = Foes("Armored Goblin", "swings a mace", 15, 5, 5, 7, 1500, 1, 2, 0, 0, "");
+    Foes goblinlarge = Foes("Armored Goblin", "swings a mace", 15, 5, 5, 7, 1500, 1, 2, 0, "");
 
-    Foes goblinking = Foes("Goblin 'King'", "swings viciously", 20, 4, 5, 5, 3000, 4, 4, 0, 0, "");
-    Foes dragonred = Foes("Red Dragon", "breathes fire", 25, 5, 6, 3, 5000, 4, 4, 0, 0, "");
+    Foes goblinking = Foes("Goblin 'King'", "swings viciously", 20, 4, 5, 5, 3000, 4, 4, 0, "");
+    Foes dragonred = Foes("Red Dragon", "breathes fire", 25, 5, 6, 3, 5000, 4, 4, 0, "");
 
     std::cout << R"(
                                                     &&
@@ -374,19 +377,22 @@ ejm98   |||
 
         wait(500);
 
+        onionsmall.ENEMYENC(onions);
+        std::cout << "You have " << onions << " onions!!!!";
+
 
         //Encounter A Skeleton|| Goblin|| Onion|
         EnemyGroup = 'A';
         rngdice = (rand() % 4);
         if (rngdice == 0 || rngdice == 1) {
             //combat!
-            skeleton.ENEMYENC();
+            skeleton.ENEMYENC(pieceofheart);
         }
         else if (rngdice == 3 || rngdice == 4) {
-            goblin.ENEMYENC();
+            goblin.ENEMYENC(sparemeat);
         }
         else if (rngdice == 2) {
-            onionsmall.ENEMYENC();
+            onionsmall.ENEMYENC(onions);
         }
         else {
             //this branch should in theroy never fire off, but its here so that if it does happen, I know where to look.
@@ -403,20 +409,20 @@ ejm98   |||
         EnemyGroup = 'B';
         rngdice = (rand() % 9);
         if (rngdice == 1 || rngdice == 2) {
-            skeleton.ENEMYENC();
+            skeleton.ENEMYENC(pieceofheart);
         }
         else if (rngdice == 3 || rngdice == 4 || rngdice == 5 || rngdice == 8) {
-            goblin.ENEMYENC();
+            goblin.ENEMYENC(sparemeat);
 
         }
         else if (rngdice == 7) {
-            onionsmall.ENEMYENC();
+            onionsmall.ENEMYENC(onions);
         }
         else if (rngdice == 0) {
-            skeletondangerous.ENEMYENC();
+            skeletondangerous.ENEMYENC(pieceofheart);
         }
         else if (rngdice == 6 || rngdice == 9) {
-            snake.ENEMYENC();
+            snake.ENEMYENC(snakeegg);
         }
         else {
             std::cerr << "A fatal error has occoured!" << std::endl;
@@ -439,20 +445,20 @@ ejm98   |||
         EnemyGroup = 'C';
         rngdice = (rand() % 9);
         if (rngdice == 1) {
-            skeleton.ENEMYENC();
+            skeleton.ENEMYENC(pieceofheart);
         }
         else if (rngdice == 8) {
-            goblin.ENEMYENC();
+            goblin.ENEMYENC(sparemeat);
 
         }
         else if (rngdice == 7 || rngdice == 2 || rngdice == 3 || rngdice == 4 || rngdice == 5 || rngdice == 6) {
-            onionsmall.ENEMYENC();
+            onionsmall.ENEMYENC(onions);
         }
         else if (rngdice == 0) {
-            skeletondangerous.ENEMYENC();
+            skeletondangerous.ENEMYENC(pieceofheart);
         }
         else if (rngdice == 9) {
-            snake.ENEMYENC();
+            snake.ENEMYENC(snakeegg);
         }
         else {
             std::cerr << "A fatal error has occoured!" << std::endl;
@@ -479,10 +485,10 @@ ejm98   |||
         EnemyGroup = 'D';
         rngdice = (rand() % 1);
         if (rngdice == 0) {
-            skeletondangerous.ENEMYENC();
+            skeletondangerous.ENEMYENC(pieceofheart);
         }
         else if (rngdice == 1) {
-            snake.ENEMYENC();
+            snake.ENEMYENC(snakeegg);
         }
         else {
             std::cerr << "A fatal error has occoured!" << std::endl;
@@ -500,16 +506,16 @@ ejm98   |||
         EnemyGroup = 'E';
         rngdice = (rand() % 4);
         if (rngdice == 0) {
-            skeleton.ENEMYENC();
+            skeleton.ENEMYENC(pieceofheart);
         }
         else if (rngdice == 1) {
-            snake.ENEMYENC();
+            snake.ENEMYENC(snakeegg);
         }
         else if (rngdice == 2 || rngdice == 3) {
-            goblin.ENEMYENC();
+            goblin.ENEMYENC(sparemeat);
         }
         else if (rngdice == 4) {
-            sqrl.ENEMYENC();
+            sqrl.ENEMYENC(rarespice);
         }
         else {
             std::cerr << "A fatal error has occoured!" << std::endl;
@@ -526,13 +532,13 @@ ejm98   |||
         EnemyGroup = 'F';
         rngdice = (rand() % 2);
         if (rngdice == 0) {
-            minos.ENEMYENC();
+            minos.ENEMYENC(sparemeat);
         }
         else if (rngdice == 1) {
-            onionsmall.ENEMYENC();
+            onionsmall.ENEMYENC(onions);
         }
         else if (rngdice == 2) {
-            sqrl.ENEMYENC();
+            sqrl.ENEMYENC(rarespice);
         }
         else {
             std::cerr << "A fatal error has occoured!" << std::endl;
@@ -549,13 +555,13 @@ ejm98   |||
         EnemyGroup = 'G';
         rngdice = (rand() % 2);
         if (rngdice == 0) {
-            snake.ENEMYENC();
+            snake.ENEMYENC(snakeegg);
         }
         else if (rngdice == 1) {
-            goblin.ENEMYENC();
+            goblin.ENEMYENC(sparemeat);
         }
         else if (rngdice == 2) {
-            sqrl.ENEMYENC();
+            sqrl.ENEMYENC(rarespice);
         }
         else {
             std::cerr << "A fatal error has occoured!" << std::endl;
@@ -569,13 +575,13 @@ ejm98   |||
         EnemyGroup = 'H';
         rngdice = (rand() % 2);
         if (rngdice == 0) {
-            skeleton.ENEMYENC();
+            skeleton.ENEMYENC(pieceofheart);
         }
         else if (rngdice == 1) {
-            onionsmall.ENEMYENC();
+            onionsmall.ENEMYENC(onions);
         }
         else if (rngdice == 2) {
-            goblin.ENEMYENC();
+            goblin.ENEMYENC(sparemeat);
         }
         else {
             std::cerr << "A fatal error has occoured!" << std::endl;
@@ -601,13 +607,13 @@ ejm98   |||
         std::cout << "Ouch! Your eyes adjust and you can see...";
         //Encounter I Huge Lizard
         EnemyGroup = 'I';
-        lizard.ENEMYENC();
+        lizard.ENEMYENC(snakeegg);
 
         FELLOWADVENTURE(1);
 
         //Encounter J King Onion
         EnemyGroup = 'J';
-        onionlarge.ENEMYENC();
+        onionlarge.ENEMYENC(onions);
 
         TREASUREROLL(6000);
 
@@ -615,13 +621,13 @@ ejm98   |||
         EnemyGroup = 'K';
         rngdice = (rand() % 2);
         if (rngdice == 0) {
-            sqrl.ENEMYENC();
+            sqrl.ENEMYENC(rarespice);
         }
         else if (rngdice == 1) {
-            minos.ENEMYENC();
+            minos.ENEMYENC(sparemeat);
         }
         else if (rngdice == 2) {
-            lizard.ENEMYENC();
+            lizard.ENEMYENC(snakeegg);
         }
         else {
             std::cerr << "A fatal error has occoured!" << std::endl;
@@ -637,7 +643,7 @@ ejm98   |||
 
         //Encounter L Armored Goblin
         EnemyGroup = 'L';
-        goblinlarge.ENEMYENC();
+        goblinlarge.ENEMYENC(onions);
         std::cout << "It appears that the Armored Goblin was nearby something interesting!" << std::endl;
         TREASUREROLL(500);
 
@@ -669,7 +675,7 @@ ejm98   |||
         wait(1000);
         std::cout << "You snap yourself out of it! Because ultimately..." << std::endl;
 
-        goblinking.ENEMYENC();
+        goblinking.ENEMYENC(onions);
 
         if (didrun == true) {
 
@@ -886,7 +892,7 @@ ejm98   |||
                                                 wait(500);
                                                 std::cout << "But..." << std::endl;
                                                 //True Final Boss
-                                                dragonred.ENEMYENC();
+                                                dragonred.ENEMYENC(onions);
                                                 if (didrun == true) {
                                                     wait(500);
                                                     std::cout << "\nBut you haven't a clue where to go next..." << std::endl;
@@ -1054,7 +1060,7 @@ void TREASUREROLL(int treasurechance) {
                 else if (rngdice == 18 || rngdice == 19) {
                     std::cout << "Inside it was a Health Potion!!!" << std::endl;
                     std::cout << "Your health has been restored!" << std::endl;
-                    PLAYERHP = (PLAYERHP + (.5 * phpmax));
+                    PLAYERHP = (PLAYERHP + (phpmax / 2));
                     //makes sure players hp doesn't excceed max.
                     if (PLAYERHP >= phpmax) {
                         PLAYERHP = phpmax;
@@ -1585,7 +1591,7 @@ void FELLOWADVENTURE(int adventype) {
                         wait(500);
                         std::cout << "You then drink the potion" << std::endl;
                         std::cout << "Your health has been restored!" << std::endl;
-                        PLAYERHP = (PLAYERHP + (.5 * phpmax));
+                        PLAYERHP = (PLAYERHP + (phpmax / 2));
                         //makes sure players hp doesn't excceed max.
                         if (PLAYERHP >= phpmax) {
                             PLAYERHP = phpmax;
